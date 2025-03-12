@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Jura:wght@300..700&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap"
+      rel="stylesheet"
+    />
+    <title>Verify Your Email</title>
+    <style>
+      a {
+        text-decoration: none;
+      }
+      body {
+        font-family: Arial, sans-serif;
+        line-height: 1.6;
+        margin: 0;
+        padding: 0;
+        background-color: #f4f4f4;
+      }
+      .container {
+        max-width: 600px;
+        margin: 20px auto;
+        background-color: #ffffff;
+        padding: 30px;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      }
+      .logo {
+        text-align: center;
+      }
+      .header {
+        text-align: center;
+        color: #333333;
+      }
+      .button {
+        
+        border: none;
+        display: inline-block;
+        padding: 12px 30px;
+        background-color: #007bff;
+        color: #ffffff;
+        text-decoration: none;
+        border-radius: 4px;
+        margin: 20px 0;
+        cursor: pointer;
+      }
+      .footer {
+        text-align: center;
+        color: #666666;
+        font-size: 12px;
+        margin-top: 30px;
+        padding-top: 20px;
+        border-top: 1px solid #eeeeee;
+      }
+      .mainimg {
+        font-size: 90px;
+        font-weight: 900;
+        text-transform: uppercase;
+        font-family: Jura, sans-serif;
+        color: #85d818; /* Choose one solid color */
+        letter-spacing: -6px;
+        margin: 0;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="logo">
+        <h1 class="mainimg">Monix</h1>
+      </div>
+      <div class="header">
+        <h1>Verify Your Email Address</h1>
+      </div>
+      <p>Hello {{ username }},</p>
+      <p>
+        Thank you for signing up! To complete your registration and activate
+        your account, please click the button below:
+      </p>
+      <div style="text-align: center">
+        <a href="{{ verify_url }}" style="cursor: pointer;"
+          ><button type="submit" class="button">Verify Email Address</button></a
+        >
+      </div>
+      <p>
+        This link will expire in 24 hours. If you didn't create an account, you
+        can safely ignore this email.
+      </p>
+      <p>
+        If the button above doesn't work, you can copy and paste the following
+        link into your browser:
+      </p>
+      <p style="word-break: break-all; color: #666666">{{ verify_url }}</p>
+      <div class="footer">
+        <p>This is an automated message, please do not reply to this email.</p>
+        <p>&copy; 2025 {{ company_name }}. All rights reserved.</p>
+      </div>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,24 @@
+[project]
+name = "project"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "alembic>=1.14.0",
+    "asyncpg[cryptography]>=0.30.0",
+    "bcrypt[cryptography]==4.0.1",
+    "fastapi-mail>=1.4.2",
+    "fastapi[all]>=0.115.8",
+    "greenlet[cryptography]>=3.1.1",
+    "itsdangerous[cryptography]>=2.2.0",
+    "jinja2>=3.1.5",
+    "passlib[cryptography]>=1.7.4",
+    "python-jose[cryptography]>=3.3.0",
+    "python-multipart[all]>=0.0.20",
+    "redis>=5.2.1",
+    "rich>=13.9.4",
+    "sqlalchemy[all]>=2.0.37",
+    "sqlmodel[all]>=0.0.22",
+    "uvicorn[all]>=0.34.0",
+]
