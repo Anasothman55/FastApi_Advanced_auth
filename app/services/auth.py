@@ -168,7 +168,7 @@ async def send_reset_password_email(email: str, username: str):
   serializer = {"email": email}
   reset_token = create_url_safe_token(serializer)
   datadict = {
-    "reset_url": f"http://0.0.0.0:8000/api/auth/reset-password?token={reset_token}",
+    "reset_url": f"http://127.0.0.1:8000/auth/reset-password?token={reset_token}",
     "username": username,
     "company_name": "Monix"
   }
@@ -190,7 +190,7 @@ async def reset_password_service(
       detail="Your account is not verified. Please verify your account."
     )
 
-  password_match = verify_password_utils(new_password, user.hash_password)
+  password_match = verify_password_utils(new_password, user.password)
 
   if password_match:
     raise HTTPException(

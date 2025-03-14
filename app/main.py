@@ -3,6 +3,7 @@ from fastapi import FastAPI
 
 from contextlib import  asynccontextmanager
 
+from .middleware.auth import RefreshTokenMiddleware
 from .root import roots
 from .db.index import init_db, close_db_connection, get_db
 
@@ -27,6 +28,8 @@ app = FastAPI(
   version="0.1.0",
   lifespan=life_span
 )
+
+app.add_middleware(RefreshTokenMiddleware)
 
 
 app.include_router(roots)
