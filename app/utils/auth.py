@@ -126,7 +126,7 @@ async def create_token(token_dict: dict ,response: Response):
   return {
     "access_token": access_token,
     "refresh_token": refresh_token,
-    "statuse": True
+    "status": True
   }
 
 async def refresh_token_utils(token_dict, rtuid, response: Response):
@@ -150,7 +150,7 @@ async def refresh_token_utils(token_dict, rtuid, response: Response):
   
   return {
     "access_token": access_token,
-    "statuse": True
+    "status": True
   }
 
 def jwt_decode(token: str, options: dict | None = None):

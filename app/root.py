@@ -1,9 +1,11 @@
-from fastapi import  APIRouter, Depends, Response, status, HTTPException
+from fastapi import  APIRouter, Depends, Response, status, HTTPException,Request
 from typing import Annotated
 from sqlalchemy import  text
 from sqlalchemy.ext.asyncio import AsyncSession
 
+
 from .db.index import get_db
+from app import  limiter
 
 roots = APIRouter()
 
@@ -28,7 +30,8 @@ async def helth(db: Annotated[AsyncSession, Depends(get_db)]):
 
 
 @roots.get("/")
-async def root_route(res: Response):
+@limiter.limit("10/minute")
+async def root_route(request: Request):
   return {"message": "Welcome to FastAPI Project"}
 
 from .routes.auth import route as auth_route

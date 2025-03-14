@@ -7,7 +7,6 @@ from fastapi import HTTPException, status
 from typing import Optional
 
 
-
 class RedisManager:
   def __init__(self, host:str, port:int, password:str, ssl:bool):
     """Initialize Redis connection with configuration."""
