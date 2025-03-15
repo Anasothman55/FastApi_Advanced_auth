@@ -1,6 +1,6 @@
 
 
-from email.message import EmailMessage
+
 from ..utils.auth import (
   error_schema,
   UserRepositoryUtils,
@@ -14,6 +14,7 @@ from ..schema.auth import CreateIUserDict, CreateUser
 from ..email.auth import UserAuthEmail
 from ..db.models import UserModel
 from ..db.redis import redis_manager, RedisError
+from ..utils import response_result
 
 from fastapi import HTTPException, status
 from pydantic import ValidationError, EmailStr
@@ -56,7 +57,11 @@ async def validate_user_data(db: AsyncSession,user: CreateIUserDict) -> CreateUs
   if errors:
     raise HTTPException(
       status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
-      detail=errors
+      detail=response_result(
+        success=False,
+        message="Invalid user data",
+        data=errors
+      )
     )
 
   return result
@@ -69,7 +74,7 @@ async def get_email_service(token:  str, user_repo: UserRepositoryUtils):
   return user
 
 #! send email services
-async def send_verify_email( email: EmailStr, username: str):
+async def send_verify_email( email: EmailStr, username: str)-> dict[str:str]:
   serializer = {"email": email}
   verify_token = create_url_safe_token(serializer)
   
@@ -90,14 +95,30 @@ async def authenticate_user(user_repo: UserRepositoryUtils, email: EmailStr, pas
   if not user:
     raise HTTPException(
       status_code=status.HTTP_404_NOT_FOUND,
-      detail={"error": "User not found", "hint": "Please check the email address","loc":"email"}
+      detail= response_result(
+        success=False,
+        message="User not found",
+        data={
+          "error": "User not found",
+          "hint": "Please check the email address",
+          "loc":"email"
+        }
+      )
     )
   
   if password != user.password:
     if not verify_password_utils(password, user.password):
       raise HTTPException(
         status_code=status.HTTP_401_UNAUTHORIZED,
-        detail={"error": "Invalid password", "hint": "Ensure the password is correct", "loc": "password"}
+        detail=response_result(
+          success=False,
+          message="Invalid password",
+          data={
+            "error": "Invalid password",
+            "hint": "Please check your password",
+            "loc":"password"
+          }
+        )
       )
   return user
 

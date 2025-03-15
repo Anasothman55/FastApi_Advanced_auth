@@ -11,7 +11,7 @@ from .root import roots
 from .db.index import init_db, close_db_connection, get_db
 from app import limiter
 
-from datetime import datetime,timezone
+
 
 @asynccontextmanager
 async def life_span(app: FastAPI):

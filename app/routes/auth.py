@@ -8,6 +8,7 @@ from fastapi.security import OAuth2PasswordRequestForm
 from sqlalchemy.ext.asyncio import AsyncSession
 from pydantic import  EmailStr
 
+from ..utils import  response_result
 from ..db.models import UserModel
 from ..db.index import get_db
 from ..schema.auth import CreateIUserDict,GetFullUser
@@ -40,8 +41,8 @@ async def signup_route(
     user_repo: Annotated[UserRepositoryUtils,  Depends(get_user_repo)],
 ):
   result = await register_crud(db, user_model, user_repo)
-  print(result)
-  return result
+  return response_result(
+    success = True,message="", data = result)
 
 
 @route.get("/verify", status_code= status.HTTP_202_ACCEPTED)

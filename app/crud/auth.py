@@ -7,7 +7,7 @@ from fastapi.security import OAuth2PasswordRequestForm
 from sqlalchemy.ext.asyncio import AsyncSession
 from pydantic import EmailStr
 
-from ..db.models import UserModel
+from ..utils import response_result
 from ..schema.auth import CreateIUserDict, CreateUser, UserBase, UserLogin
 from ..services.auth import (
   validate_user_data,
@@ -51,29 +51,28 @@ async def register_crud(db: AsyncSession, user_model: CreateIUserDict,user_repo:
 #? user verify email function
 @handle_exceptions
 async def verify_email_crud(db: AsyncSession, token: str):
-  try:
-    user_repo = UserRepositoryUtils(db)
-    user = await get_email_service(token, user_repo)
-    
-    if user.is_verified:
-      return RedirectResponse(url="/")
-    
-    user.is_verified = True
-    await db.commit()
-    await db.refresh(user)
+  user_repo = UserRepositoryUtils(db)
+  user = await get_email_service(token, user_repo)
 
-    if user:
-      return JSONResponse(
-        status_code=status.HTTP_200_OK,
-        content={
+  if user.is_verified:
+    return RedirectResponse(url="/")
+
+  user.is_verified = True
+  await db.commit()
+  await db.refresh(user)
+
+  if user:
+    return JSONResponse(
+      status_code=status.HTTP_200_OK,
+      content=response_result(
+        success=True,
+        message="Email verified successfully",
+        data= {
           "message": "Email verified successfully. You will be redirected shortly.",
-          "redirect_url": "/"  
+          "redirect_url": "/"
         }
       )
-  except HTTPException as e:
-    raise HTTPException(status_code=e.status_code, detail=str(e)) from e
-  except Exception as e:
-    raise HTTPException(status_code=500, detail=str(e)) from e
+    )
 #? user login function
 
 @handle_exceptions
@@ -90,7 +89,13 @@ async def login_crud(db: AsyncSession,form_data: OAuth2PasswordRequestForm, resp
     response_data = await send_verify_email(user.email, user.username, msg)
     return JSONResponse(
       status_code=status.HTTP_403_FORBIDDEN,
-      content={"detail": response_data}
+      content= response_result(
+        success=False,
+        message="This account is not verified",
+        data= {
+          "detail": response_data
+        }
+      )
     )
   
   token_dict = {
@@ -102,7 +107,11 @@ async def login_crud(db: AsyncSession,form_data: OAuth2PasswordRequestForm, resp
   await db.refresh(user)
   
   result = await create_token(token_dict,response)
-  return {"message": result, "user": user}
+  return response_result(
+    success=True,
+    message="Login successful",
+    data={"message": result, "user": user}
+  )
 
 #? user logout function
 @handle_exceptions

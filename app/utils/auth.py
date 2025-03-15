@@ -17,7 +17,7 @@ from pydantic import EmailStr
 from ..db.models import UserModel
 from ..core.config import setting
 from ..db.redis import redis_manager
-
+from ..utils import  response_result
 
 
 #? hash and verify password
@@ -54,17 +54,23 @@ def decode_url_safe_token(token: str, max_age: int = 3600 * 24)-> dict:
   try:
     return serializer.loads(token, max_age=max_age)
   
-  except SignatureExpired:
-    
+  except SignatureExpired as e:
     raise HTTPException(
       status_code= status.HTTP_401_UNAUTHORIZED,
-      detail={"message": "Token has expired"}
+      detail= response_result(
+        success=False,
+        message="Token expired",
+        data= e
+      )
     )
-  except BadSignature:
-    
+  except BadSignature as e:
     raise HTTPException(
       status_code= status.HTTP_401_UNAUTHORIZED,
-      detail={"message": "Invalid token"}
+      detail= response_result(
+        success=False,
+        message="Invalid token",
+        data= e
+      )
     )
 
 
